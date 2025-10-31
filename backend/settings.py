@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-import pymysql
-pymysql.install_as_MySQLdb()
+from django.conf import settings
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -69,10 +69,12 @@ REST_FRAMEWORK = {
 }
 # ////////////////////////////
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
+    "ALGORITHM": "HS256",
+    'SIGNING_KEY' :settings.SECRET_KEY,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
