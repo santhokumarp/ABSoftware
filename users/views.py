@@ -16,35 +16,83 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# class LoginView(APIView):
+#     def post(self, request):
+#         serializer = LoginSerializer(data=request.data)
+#         if serializer.is_valid():
+#             username = serializer.validated_data.get("username")
+#             password = serializer.validated_data.get("password")
+
+#             # ✅ Check user by username or email
+#             user = Login.objects.filter(username=username).first()
+#             if not user:
+#                 user = Login.objects.filter(email=username).first()
+
+#             # ✅ Handle user not found
+#             if not user:
+#                 return Response({"error": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+#             # ✅ Verify password
+#             if user.check_password(password):
+#                 refresh = RefreshToken.for_user(user)
+#                 return Response({
+#                     "message": "Login successful",
+#                     "username": user.username,
+#                     "access": str(refresh.access_token),
+#                     "refresh": str(refresh)
+#                 }, status=status.HTTP_200_OK)
+#             else:
+#                 return Response({"error": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 class LoginView(APIView):
+
     def post(self, request):
+
         serializer = LoginSerializer(data=request.data)
+
         if serializer.is_valid():
+
             username = serializer.validated_data.get("username")
+
             password = serializer.validated_data.get("password")
-
-            # ✅ Check user by username or email
+ 
             user = Login.objects.filter(username=username).first()
+
             if not user:
+
                 user = Login.objects.filter(email=username).first()
-
-            # ✅ Handle user not found
+ 
             if not user:
-                return Response({"error": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
-            # ✅ Verify password
+                return Response({"error": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+ 
             if user.check_password(password):
-                refresh = RefreshToken.for_user(user)
-                return Response({
-                    "message": "Login successful",
-                    "username": user.username,
-                    "access": str(refresh.access_token),
-                    "refresh": str(refresh)
-                }, status=status.HTTP_200_OK)
-            else:
-                return Response({"error": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
+                refresh = RefreshToken.for_user(user)
+
+                return Response({
+
+                    "message": "Login successful",
+
+                    "user": {"username": user.username, "email": user.email},
+
+                    "access": str(refresh.access_token),
+
+                    "refresh": str(refresh)
+
+                }, status=status.HTTP_200_OK)
+
+            else:
+
+                return Response({"error": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+ 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+ 
 
 class GenderListCreateView(APIView):
     def get(self, request):
@@ -76,7 +124,7 @@ class ServiceListCreateView(APIView):
 class UserListCreateView(APIView):
     def get(self, request):
         users = Users.objects.all()
-        serializer = ServiceSerializer(users, many=True)
+        serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
     
     def post(self, request):
@@ -96,6 +144,8 @@ class CartListCreateView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# class ConfirmBookingView(APIView):
 
 
 

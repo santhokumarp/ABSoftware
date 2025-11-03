@@ -5,7 +5,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
-        model = Users
+        model = Login
         fields = ['username','email','password','password2','role']
         extra_kwargs = {
             'role': {'read_only': True},
@@ -25,7 +25,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-class LoginSerializer(serializers.ModelSerializer):
+class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=False , allow_blank = True)
     email = serializers.CharField(required=False , allow_blank = True)
     password = serializers.CharField(write_only=True)
